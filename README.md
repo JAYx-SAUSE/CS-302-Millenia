@@ -24,21 +24,24 @@ AcademicOverrideSystem/
 │   ├── Core.Domain/                    # Pure Domain (Zero External Dependencies)
 │   │   ├── Entities/                   # OverrideRequest, Student, Course, AuditRecord
 │   │   ├── ValueObjects/               # GPACalculation, CourseGrade, PolicyCitation
+│   │   ├── Entities/                   # TranscriptData, CourseRequirements, AuditRecord
 │   │   ├── Services/                   # PrerequisiteValidator (Pure Business Rules)
 │   │   └── Interfaces/                 # ITranscriptParserGateway, IPolicyRagGateway
+│   │   └── Interfaces/                 # ITranscriptParserGateway, IAuditLogger
 │   │
 │   ├── Core.Application/               # Application Use Cases & Orchestration
 │   │   ├── Commands/                   # IngestRequestCommand, SubmitDecisionCommand
 │   │   ├── Queries/                    # GetPendingQueueQuery, GetAuditTrailQuery
-│   │   └── Interfaces/                 # IObservabilityLogger
+│   │   └── UseCases/                   # ProcessOverrideRequest, SubmitAdvisorDecision
 │   │
 │   ├── Infrastructure.AI/              # Outer AI Infrastructure Adapters
 │   │   ├── Adapters/                   # GeminiTranscriptParserAdapter, PolicyRagAdapter
 │   │   ├── CircuitBreaker/             # TokenBudgetManager, CostCircuitBreaker
 │   │   └── Prompts/                    # Externalized Prompt Templates
+│   │   └── Adapters/                   # GeminiTranscriptParserAdapter, InMemoryAuditLogger
 │   │
 │   └── Presentation.WebAPI/            # Entry Point / Composition Root
-│       ├── Controllers/                # OverrideQueueController
+│       ├── Controllers/                # OverrideController
 │       └── Program.cs                  # DI Wiring & Governance Registration
 │
 └── tests/
@@ -109,7 +112,7 @@ Step 2: Build the Solution
 dotnet build AcademicOverrideSystem.sln
 
 
-Step 3: Run Domain Unit Tests (No Live Model Calls)
+Step 3: Launch Web API
 
 dotnet test tests/Core.Domain.Tests/Core.Domain.Tests.csproj
 
@@ -119,22 +122,22 @@ Step 4: Launch Web API & Advisor Queue
 dotnet run --project src/Presentation.WebAPI/Presentation.WebAPI.csproj
 
 
-Navigate to https://localhost:7001/swagger (or the HTTP endpoint) to inspect the API contracts.
+The API listens on the URLs printed at startup. Open the root URL for the applicant and supervisor dashboard. Requests, advisor audit records, and notices are held in memory and clear when the API restarts. The parser is currently a mock and does not call Gemini.
 
 🛠 Usage Pipeline
 
-Submit Request: POST a student request form with an attached transcript PDF stream to /api/override/ingest.
+Submit Request: POST multipart form data, including the PDF, target course, minimum GPA, and comma-separated prerequisites to `/process`.
 
-AI Extraction Phase: GeminiTranscriptParserAdapter extracts completed courses and numeric GPA into structured JSON.
+AI Extraction Phase: GeminiTranscriptParserAdapter returns mock structured transcript data; it does not yet invoke an LLM or parse real PDF content.
 
 Deterministic Evaluation: PrerequisiteValidator (Core Domain) runs hard prerequisite rules and assigns a recommendation (RECOMMEND_APPROVE, RECOMMEND_DENY, or FLAG_HUMAN_REVIEW).
 
-Human Decision Gate: The Department Lead Advisor fetches the pending review item via /api/override/pending, verifies policy citations, and submits a final approval decision.
+Human Decision Gate: The Department Lead Advisor reviews the recommendation and posts the request ID, decision (`Approved` or `Rejected`), advisor ID, and notes to `/advisor-signoff`.
 
 🤖 AI Attribution & Audit
 
-AI Contribution: AI is utilized for structured document parsing (extracting raw course codes/grades from PDFs) and RAG policy lookup.
+AI Contribution: LLM parsing and RAG lookup are planned adapter responsibilities; this scaffold uses a mock parser and has no live AI integration.
 
 Human Architecture: Domain entity boundaries, hard eligibility evaluation, token circuit-breaking, and final override decisions are strictly authored and maintained by the engineering team.
 
-Audit Trail: Every processed request logs raw JSON extraction, prompt versions, retrieved policy chunk IDs, and advisor signature timestamps in an immutable record.
+Audit Trail: Advisor decisions are appended as immutable records by an in-memory logger. This scaffold does not yet provide durable audit storage.

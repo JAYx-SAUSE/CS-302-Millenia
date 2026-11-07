@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Millenia override desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+<style>
+:root{--bg:#eef2f1;--panel:#fff;--ink:#16232c;--mute:#566771;--line:#cbd7d5;--accent:#1d5d78;--accent-ink:#fff;--deny:#a8281f;--deny-bg:#fbe9e7;--hold:#6f4a00;--hold-bg:#fff1cf;--ok:#1b6b45;--ok-bg:#e1f1e8;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a20;--panel:#17252d;--ink:#e6eef1;--mute:#98a9b2;--line:#2b3d47;--accent:#6fb8d6;--accent-ink:#0b1519;--deny:#ff9a8f;--deny-bg:#3a1b19;--hold:#f0c36b;--hold-bg:#3a2d10;--ok:#7fd3a4;--ok-bg:#13301f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a20;--panel:#17252d;--ink:#e6eef1;--mute:#98a9b2;--line:#2b3d47;--accent:#6fb8d6;--accent-ink:#0b1519;--deny:#ff9a8f;--deny-bg:#3a1b19;--hold:#f0c36b;--hold-bg:#3a2d10;--ok:#7fd3a4;--ok-bg:#13301f;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "Public Sans",system-ui,sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 18px 56px}
+h1{font:600 clamp(28px,5vw,40px)/1.1 "Source Serif 4",Georgia,serif;margin:0 0 10px}
+h2{font:600 19px/1.2 "Source Serif 4",Georgia,serif;margin:0 0 4px}
+.lede{max-width:64ch;color:var(--mute);margin:0 0 22px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.bar{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;margin-bottom:18px}
+.bar .clock{font-weight:600}
+.bar .clock small{display:block;font-weight:400;color:var(--mute)}
+.grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);margin:0 0 16px;padding-bottom:10px}
+.content{max-width:820px}
+.result{border-left:4px solid var(--accent);padding-left:12px;margin:12px 0}
+.state{font-size:12px;font-weight:600;border-radius:3px;padding:2px 7px;background:var(--hold-bg);color:var(--hold)}
+.state.done{background:var(--ok-bg);color:var(--ok)}
+.state.rejected{background:var(--deny-bg);color:var(--deny)}
+.card h3{font-size:15px;margin:0 0 4px}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--panel);border-radius:5px;padding:7px 12px}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+label{display:block;font-weight:600;margin:10px 0 4px}
+input,select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:5px;padding:8px}
+input[type=number]{width:72px}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.lane{border-radius:6px;padding:12px;min-height:220px;border:1px solid var(--line);background:var(--panel)}
+.lane.wait{border-top:4px solid var(--hold)}
+.lane.sup{border-top:4px solid var(--ok)}
+.lane.drop{border-top:4px solid var(--deny)}
+.lane p.note{margin:0 0 12px;font-size:13px;color:var(--mute)}
+.empty{color:var(--mute);font-size:13px;border:1px dashed var(--line);border-radius:5px;padding:12px}
+.card{border:1px solid var(--line);border-radius:5px;padding:10px;margin-bottom:10px;background:var(--bg)}
+.card b{display:block}
+.meta{font-size:12px;color:var(--mute)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{font-size:12px;border-radius:99px;padding:2px 9px;border:1px solid currentColor}
+.chip.t{color:var(--ok);background:var(--ok-bg)}
+.chip.f{color:var(--deny);background:var(--deny-bg)}
+.track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 8px}
+.track i{display:block;height:100%;background:var(--hold)}
+.track.hot i{background:var(--deny)}
+.card button{font-size:13px;padding:4px 9px}
+.status{min-height:22px;font-weight:600;margin:12px 0 0}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+details{border-top:1px solid var(--line);padding:8px 0}
+summary{cursor:pointer}
+.tag{font-size:12px;font-weight:600;border-radius:3px;padding:1px 6px;margin-right:6px}
+.tag.d{color:var(--deny);background:var(--deny-bg)}
+.tag.r{color:var(--hold);background:var(--hold-bg)}
+pre{white-space:pre-wrap;margin:8px 0 0;font:13px/1.5 "Public Sans",system-ui,sans-serif;color:var(--mute)}
+.scroll{overflow-x:auto}
+input[readonly]{opacity:.8;cursor:not-allowed}
+[hidden]{display:none!important}
+button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.tag.ok{color:var(--ok);background:var(--ok-bg)}
+.lane.dec{border-top:4px solid var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
+th{color:var(--mute);font-weight:600}
+@media (max-width:900px){.layout,.lower{grid-template-columns:1fr}.lanes{grid-template-columns:1fr}.lane{min-height:0}}
+@media (prefers-reduced-motion:no-preference){.track i{transition:width .3s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Millenia override desk</h1>
+  <p class="lede">Submit transcript-based course override requests and review advisor decisions.</p>
+  <div class="grp" style="margin-bottom:14px" role="group" aria-label="Choose a desk"><button id="tApp" aria-pressed="true">Applicant desk</button><button id="tSup" aria-pressed="false">Supervisor desk <span id="qn"></span></button><span class="meta" id="apiState" role="status">Connecting…</span><button id="refresh" type="button" title="Refresh requests">Refresh</button></div>
+  <p class="status" id="msg" role="status" aria-live="polite"></p>
+
+  <div id="vApp">
+    <div class="tabs" role="tablist" aria-label="Applicant desk sections"><button id="tDocs" role="tab" aria-selected="true">Documents</button><button id="tDrop" role="tab" aria-selected="false">New File Drop</button></div>
+    <section id="vDocs" role="tabpanel">
+      <div class="grp" style="margin-bottom:10px"><label for="flt" style="margin:0">Applicant ID</label><input id="flt" placeholder="Filter by applicant" style="max-width:240px"></div>
+      <div id="documents" class="content"></div>
+    </section>
+    <section id="vDrop" class="panel content" role="tabpanel" hidden>
+      <h2>New override request</h2>
+      <p class="meta" style="margin:0">The transcript parser is currently a project mock; every recommendation still requires an advisor decision.</p>
+      <form id="uploadForm">
+        <label for="who">Applicant ID</label><select id="who" name="ApplicantId"><option>S-1001</option><option>S-1002</option><option>S-1003</option></select>
+        <label for="course">Target course code</label><input id="course" name="TargetCourseCode" required maxlength="32" placeholder="CS302">
+        <label for="gpa">Minimum GPA</label><input id="gpa" name="MinimumGpa" type="number" min="0" max="4" step="0.01" value="2.0" required>
+        <label for="prereqs">Required prerequisites</label><input id="prereqs" name="RequiredPrerequisites" placeholder="CS101, MATH101">
+        <label for="transcript">Transcript PDF</label><input id="transcript" name="Transcript" type="file" accept="application/pdf,.pdf" required>
+        <p class="meta" style="margin:6px 0 0">PDF only. Requests and notices remain in development memory and clear when the API restarts.</p>
+        <div class="grp" style="margin-top:12px"><button class="primary" id="submitRequest" type="submit">Send to advisor queue</button></div>
+      </form>
+    </section>
+  </div>
+
+  <section class="panel" id="vSup" hidden><h2>Supervisor desk</h2><p class="meta" style="margin:0 0 12px">Signed in as SUP-001. Recommendations support review; only an advisor can approve or reject.</p><div id="queue"></div></section>
+  <div class="lower">
+    <div class="panel"><h2>Notice outbox</h2><p class="meta" style="margin:0 0 8px">Notices are recorded here; no email is sent.</p><div id="mail"></div></div>
+    <div class="panel"><h2>Advisor audit</h2><p class="meta" style="margin:0 0 8px">Recorded advisor decisions.</p><div class="scroll" id="audit"></div></div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??"").replace(/[&<>\"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[char]));
+const state={requests:[],audit:[],outbox:[]};
+const formatDate=value=>new Date(value).toLocaleString();
+const api=async(url,options={})=>{
+  const response=await fetch(url,options);
+  if(!response.ok){const detail=await response.text();throw new Error(detail||`Request failed (${response.status})`)}
+  return response.status===204?null:response.json();
+};
+const statusClass=status=>status==="Approved"?"state done":status==="Rejected"?"state rejected":"state";
+function renderDocuments(){
+  const filter=$("flt").value.trim().toUpperCase();
+  const requests=state.requests.filter(item=>!filter||item.applicantId.toUpperCase().includes(filter));
+  $("documents").innerHTML=requests.length?requests.map(item=>{
+    const plan=item.evaluation.recommendationPlan;
+    const decision=item.decision?`<p class="meta">${esc(item.decision.decision)} by ${esc(item.decision.advisorId)}${item.decision.reviewerNotes?`: ${esc(item.decision.reviewerNotes)}`:""}</p>`:"";
+    return `<article class="card"><h3>${esc(item.requirements.targetCourseCode)} <span class="${statusClass(item.status)}">${esc(item.status)}</span></h3><div class="meta">${esc(item.applicantId)} · ${esc(item.fileName)} · ${formatDate(item.submittedAtUtc)}</div><div class="result"><strong>${esc(plan.recommendation)}</strong><div>${esc(plan.summary)}</div><div class="meta">Transcript GPA ${esc(item.evaluation.transcript.gpa)}; minimum ${esc(item.requirements.minimumGpa)}. ${plan.meetsMinimumGpa?"GPA requirement met.":"GPA requirement not met."}</div>${plan.missingPrerequisites.length?`<div class="meta">Missing prerequisites: ${plan.missingPrerequisites.map(esc).join(", ")}</div>`:""}</div>${decision}</article>`;
+  }).join(""):`<div class="empty">No requests found.</div>`;
+}
+function renderQueue(){
+  const pending=state.requests.filter(item=>item.status==="Pending").slice().reverse();
+  $("qn").textContent=pending.length?`(${pending.length})`:"";
+  $("queue").innerHTML=pending.length?pending.map(item=>{
+    const plan=item.evaluation.recommendationPlan;
+    const courses=item.evaluation.transcript.courses.map(course=>`${esc(course.courseCode)} (${esc(course.grade)})`).join(", ")||"No course details";
+    return `<article class="card"><h3>${esc(item.applicantId)} · ${esc(item.requirements.targetCourseCode)}</h3><div class="meta">${esc(item.requestId)} · ${esc(item.fileName)} · ${formatDate(item.submittedAtUtc)}</div><div class="result"><strong>${esc(plan.recommendation)}</strong><div>${esc(plan.summary)}</div><div class="meta">GPA ${esc(item.evaluation.transcript.gpa)}; completed courses: ${courses}</div></div><div class="grp" style="margin:8px 0"><input data-note="${esc(item.requestId)}" aria-label="Reviewer note" placeholder="Reviewer note (optional)" style="flex:1;min-width:180px"><button class="primary" data-decision="Approved" data-id="${esc(item.requestId)}">Approve</button><button data-decision="Rejected" data-id="${esc(item.requestId)}">Reject</button></div></article>`;
+  }).join(""):`<div class="empty">No requests are waiting for an advisor decision.</div>`;
+}
+function renderOutbox(){
+  $("mail").innerHTML=state.outbox.length?state.outbox.map(notice=>`<details><summary>${esc(notice.subject)} <span class="meta">${formatDate(notice.createdAtUtc)} · to ${esc(notice.recipient)}</span></summary><pre>${esc(notice.body)}</pre></details>`).join(""):`<div class="empty">No notices recorded.</div>`;
+}
+function renderAudit(){
+  $("audit").innerHTML=state.audit.length?`<table><thead><tr><th>Time</th><th>Request</th><th>Advisor</th><th>Decision</th><th>Notes</th></tr></thead><tbody>${state.audit.map(record=>`<tr><td>${formatDate(record.signedAtUtc)}</td><td>${esc(record.requestId)}</td><td>${esc(record.advisorId)}</td><td>${esc(record.decision)}</td><td>${esc(record.reviewerNotes||"")}</td></tr>`).join("")}</tbody></table>`:`<div class="empty">No advisor decisions recorded.</div>`;
+}
+async function refresh(){
+  $("apiState").textContent="Loading…";
+  try{
+    [state.requests,state.audit,state.outbox]=await Promise.all([api("/requests"),api("/audit"),api("/outbox")]);
+    $("apiState").textContent="API connected";
+    renderDocuments();renderQueue();renderOutbox();renderAudit();
+  }catch(error){$("apiState").textContent="API unavailable";$("msg").textContent=error.message}
+}
+function showApplicantTab(showDrop){
+  $("vDocs").hidden=showDrop;$("vDrop").hidden=!showDrop;
+  $("tDocs").setAttribute("aria-selected",String(!showDrop));$("tDrop").setAttribute("aria-selected",String(showDrop));
+}
+$("tApp").addEventListener("click",()=>{$("vApp").hidden=false;$("vSup").hidden=true;$("tApp").setAttribute("aria-pressed","true");$("tSup").setAttribute("aria-pressed","false")});
+$("tSup").addEventListener("click",()=>{$("vApp").hidden=true;$("vSup").hidden=false;$("tApp").setAttribute("aria-pressed","false");$("tSup").setAttribute("aria-pressed","true")});
+$("tDocs").addEventListener("click",()=>showApplicantTab(false));
+$("tDrop").addEventListener("click",()=>showApplicantTab(true));
+$("flt").addEventListener("input",renderDocuments);
+$("refresh").addEventListener("click",refresh);
+$("uploadForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  const form=event.currentTarget;
+  const button=$("submitRequest");button.disabled=true;$("msg").textContent="Submitting transcript for evaluation…";
+  try{
+    const entry=await api("/process",{method:"POST",body:new FormData(form)});
+    $("msg").textContent=`Request ${entry.requestId} was added to the advisor queue.`;
+    form.reset();$("gpa").value="2.0";showApplicantTab(false);await refresh();
+  }catch(error){$("msg").textContent=error.message}
+  finally{button.disabled=false}
+});
+document.addEventListener("click",async event=>{
+  const button=event.target.closest("[data-decision]");
+  if(!button)return;
+  button.disabled=true;
+  try{
+    const id=button.dataset.id;
+    await api("/advisor-signoff",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({requestId:id,advisorId:"SUP-001",decision:button.dataset.decision,reviewerNotes:document.querySelector(`[data-note="${id}"]`).value})});
+    $("msg").textContent=`Request ${id} ${button.dataset.decision.toLowerCase()} by SUP-001.`;
+    await refresh();
+  }catch(error){$("msg").textContent=error.message;button.disabled=false}
+});
+refresh();
+</script>
+</body>
+</html>
